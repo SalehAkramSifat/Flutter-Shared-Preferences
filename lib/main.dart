@@ -31,19 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
     loadNotes();
   }
 
-  // ✅ Data Save Function (Bug Fixed)
+  //Data Save======================================================
   Future<void> saveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (_controller.text.isNotEmpty) { // ফাঁকা নোট আটকানো হলো
+    if (_controller.text.isNotEmpty) {
       notes.add(_controller.text);
-      await prefs.setStringList('notes', notes); // List হিসেবে স্টোর
+      await prefs.setStringList('notes', notes);
       _controller.clear();
       setState(() {});
     }
   }
 
-  // ✅ Data Load Function
+  //Data Load======================================================
   Future<void> loadNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? storedNotes = prefs.getStringList('notes');
@@ -55,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // ✅ Data Delete Function
+  // Data Delete===================================================
   Future<void> deleteNote(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     notes.removeAt(index);
@@ -63,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+
+
+
+  ///UI Design====================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.blue,
         elevation: 3,
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -88,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
           Row(
             children: [
               SizedBox(width: 20),
@@ -97,11 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
           SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: notes.length,
               itemBuilder: (context, index) {
+
                 return ListTile(
                   title: Text(notes[index]),
                   trailing: IconButton(
