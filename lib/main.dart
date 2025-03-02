@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,13 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
     loadNotes();
   }
 
-  // ✅ Data Save Function
+  // ✅ Data Save Function (Bug Fixed)
   Future<void> saveData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (_controller.text.isNotEmpty) { // ফাঁকা নোট আটকানো হলো
       notes.add(_controller.text);
-      await prefs.setString('note', jsonEncode(notes));
+      await prefs.setStringList('notes', notes); // List হিসেবে স্টোর
       _controller.clear();
       setState(() {});
     }
@@ -47,19 +46,20 @@ class _HomeScreenState extends State<HomeScreen> {
   // ✅ Data Load Function
   Future<void> loadNotes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? data = prefs.getString('note');
+    List<String>? storedNotes = prefs.getStringList('notes');
 
-    if (data != null) {
+    if (storedNotes != null) {
       setState(() {
-        notes = List<String>.from(jsonDecode(data));
+        notes = storedNotes;
       });
     }
   }
 
+  // ✅ Data Delete Function
   Future<void> deleteNote(int index) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     notes.removeAt(index);
-    await prefs.setString('note', jsonEncode(notes));
+    await prefs.setStringList('notes', notes);
     setState(() {});
   }
 
